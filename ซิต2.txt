@@ -1,0 +1,32 @@
+function doGet(e) {
+  
+  return HtmlService.createTemplateFromFile("index").evaluate()
+  .setTitle("ระบบค้นหาข้อมูล")
+  .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+  .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function processForm(formObject){ 
+  var concat = formObject.searchtext+formObject.searchtext2;
+  var result = "";
+  if(concat){
+      result = search(concat);
+  }
+  return result;
+}
+
+function search(searchtext){
+  var spreadsheetId   = '1INpMnhLgVsmw-OPGsRfymQo8EFlSzSqAQPyH7wRsUMA';
+  var sheetName = "ชีต1"
+  var range = SpreadsheetApp.openById(spreadsheetId).getSheetByName(sheetName).getDataRange();
+  var data = range.getValues();
+  var ar = [];
+  
+  data.forEach(function(f) {
+    if (~[f[6]].indexOf(searchtext)) {
+      ar.push([ f[1],f[3],f[4],f[5] ]);
+    }
+  });
+                                           
+  return ar;
+};
